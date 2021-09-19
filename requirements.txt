@@ -1,0 +1,2 @@
+django
+https://pocoz.gitbooks.io/django-v-primerah/content/
