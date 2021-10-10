@@ -2,7 +2,6 @@ from .models import Post
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import PostForm, CommentForm
-from django.template.defaultfilters import slugify
 
 
 def post_list(request):
@@ -12,10 +11,11 @@ def post_list(request):
 
 
 def post_detail(request, slug):
+    print('DETAIL')
     post = get_object_or_404(Post, slug=slug)
     comments = post.comments.filter(active=True)
     if request.method == 'POST':
-        comment_form = CommentForm(data=request.POST)
+        comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
             new_comment = comment_form.save(commit=False)
             new_comment.post = post
@@ -31,7 +31,6 @@ def post_new(request):
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            post.slug = slugify(request.title)
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
@@ -41,8 +40,9 @@ def post_new(request):
     return render(request, 'blog/post_edit.html', {'form': form})
 
 
+
 def post_edit(request, slug):
-    print('post_EDIIT')
+    print('post_EDIT')
     post = get_object_or_404(Post, slug=slug)
     if request.method == "POST":
         form = PostForm(request.POST, instance=post)

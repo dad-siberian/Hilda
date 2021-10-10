@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.urls import reverse
-from django.template.defaultfilters import slugify
+from pytils import translit
 
 # Посты блога
 class Post(models.Model):
@@ -26,8 +26,12 @@ class Post(models.Model):
         return reverse('blog:post_detail',
                         args=[self.slug])
 
-    def title_to_slug(self):
-        return slugify(self.title)
+        
+# переопределение функции save() для создания слизня с использованием pytils для транслитизации кириллицы
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = translit.slugify(self.title)
+        return super().save(*args, **kwargs)
 
 #  Коментарии
 class Comment(models.Model):
