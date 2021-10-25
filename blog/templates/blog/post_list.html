@@ -7,7 +7,9 @@
                 {{ post.published_date }}
             </div>
             <h1><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h1>
+            <p class="tags">Tags: {{ post.tags.all|join:", " }}</p>
             <p>{{ post.text|linebreaksbr }}</p>
         </div>
     {% endfor %}
+    {% include "blog/pagination.html" with page=page_obj %}
 {% endblock %}

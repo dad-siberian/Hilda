@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.urls import reverse
 from pytils import translit
+from taggit.managers import TaggableManager
 
 # Посты блога
 class Post(models.Model):
@@ -12,6 +13,7 @@ class Post(models.Model):
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
+    tags = TaggableManager()
 
 
 

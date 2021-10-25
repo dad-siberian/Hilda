@@ -2,12 +2,31 @@ from .models import Post
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import PostForm, CommentForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.generic import ListView
 
+# Использование базовых классов представлений (class-based views) для post_list
+class PostListView(ListView):
+    queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('created_date')
+    context_object_name = 'posts'
+    paginate_by = 3 # 3 posts in each page
+    template_name = 'blog/post_list.html'
 
+# Альтернативное представление post_list
 def post_list(request):
-    posts = Post.objects.filter(
-        published_date__lte=timezone.now()).order_by('published_date')
-    return render(request, 'blog/post_list.html', {'posts': posts})
+    object_list = Post.objects.filter(published_date__lte=timezone.now()).order_by('created_date')
+    paginator = Paginator(object_list, 3)  # 3 posts in each page
+    page = request.GET.get('page')
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+    return render(request,
+                  'blog/post_list.html',
+                  {'page': page,
+                   'posts': posts})
 
 
 def post_detail(request, slug):
