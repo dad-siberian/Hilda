@@ -4,6 +4,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import PostForm, CommentForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
+from taggit.models import Tag
+from django.db.models import Count
 
 # Использование базовых классов представлений (class-based views) для post_list
 class PostListView(ListView):
@@ -12,9 +14,14 @@ class PostListView(ListView):
     paginate_by = 3 # 3 posts in each page
     template_name = 'blog/post_list.html'
 
+
 # Альтернативное представление post_list
-def post_list(request):
+def post_list(request, tag_slug=None):
     object_list = Post.objects.filter(published_date__lte=timezone.now()).order_by('created_date')
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        object_list = object_list.filter(tags__in=[tag])
     paginator = Paginator(object_list, 3)  # 3 posts in each page
     page = request.GET.get('page')
     try:
@@ -26,7 +33,8 @@ def post_list(request):
     return render(request,
                   'blog/post_list.html',
                   {'page': page,
-                   'posts': posts})
+                   'posts': posts,
+                   'tag': tag})
 
 
 def post_detail(request, slug):
@@ -41,8 +49,17 @@ def post_detail(request, slug):
             new_comment.save()
             comment_form = CommentForm()
     else:
-        comment_form = CommentForm()        
-    return render(request, 'blog/post_detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form})
+        comment_form = CommentForm()   
+    
+    # Список похожих постов
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_posts = Post.objects.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags','-published_date')[:4]
+
+    return render(request, 'blog/post_detail.html', {'post': post,
+                                                    'comments': comments,
+                                                    'comment_form': comment_form,
+                                                    'similar_posts': similar_posts})
 
 
 def post_new(request):
