@@ -1,3 +1,12 @@
 {
-  "files": {}
+  "files": {
+    "mysite/templates/polls/base.html": [
+      {
+        "id": "4876fa21-bbd8-42b8-8509-8a3b6eacb5b2",
+        "line": 1,
+        "version": 0,
+        "index": 0
+      }
+    ]
+  }
 }
