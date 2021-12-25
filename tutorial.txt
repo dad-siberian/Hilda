@@ -1,2 +1,4 @@
-https://pocoz.gitbooks.io/django-v-primerah/content/
+https://pocoz.gitbooks.io/django-v-primerah/content/  - Очень старый учебник. Версия джанго до 2. Найди другой
+
+https://vk.com/wall-159224823_98171  - Владимир Дронов Django 3.0. Практика создания веб-сайтов на Python
 https://developer.mozilla.org/ru/docs/Learn/Server-side/Django
