@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog',
     'taggit',
+    'django_bootstrap_icons'
 ]
 
 MIDDLEWARE = [
