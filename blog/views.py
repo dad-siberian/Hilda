@@ -12,7 +12,7 @@ class PostListView(ListView):
     queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('created_date')
     context_object_name = 'posts'
     paginate_by = 3 # 3 posts in each page
-    template_name = 'blog/post_list.html'
+    template_name = 'blog/lastest_post.html'
 
 
 # Альтернативное представление post_list
