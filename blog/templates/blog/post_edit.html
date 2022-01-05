@@ -2,8 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-
-    <p class="h2">New post</p>
+    <div class="p-3">
     <form method="POST" class="post-form">
         {% csrf_token %}
 <div class="mb-3">
@@ -11,6 +10,7 @@
 </div>
         <button type="submit" class="save btn btn-primary">Save</button>
     </form>
+</div>
 
 
 
