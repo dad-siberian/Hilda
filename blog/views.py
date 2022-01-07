@@ -7,6 +7,7 @@ from django.views.generic import ListView
 from taggit.models import Tag
 from django.db.models import Count
 
+
 # Использование базовых классов представлений (class-based views) для post_list
 class PostListView(ListView):
     queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('created_date')
@@ -91,3 +92,7 @@ def post_edit(request, slug):
     else:
         form = PostForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form': form})
+
+
+def show_main_page(request):
+    return render(request, 'blog/main_page.html')
